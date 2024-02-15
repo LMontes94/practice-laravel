@@ -17,6 +17,33 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/texto', function () {
+    return '<h1>Pruebaa de la route </h1>';
+});
+
+Route::get('/cliente/{cliente?}', function ($cliente = 'Cliente general') {
+    $arreglo = ['lunes', 'martes', 'miercoles'];
+    return '<h1>El cliente es: ' .$cliente. '</h1>';
+});
+
+Route::get('/arreglo', function () {
+    $arreglo = ['lunes', 'martes', 'miercoles'];
+    return $arreglo;
+});
+
+Route::get('/ruta1', function () {
+    return '<h1>ruta 1 </h1>';
+})->name('rutaNro1');
+
+Route::get('/ruta2', function () {
+    return redirect()->route('rutaNro1');
+});
+
+//validacion
+Route::get('/usuario/{usuario}', function ($usuario) {
+    return '<h1>El usuario es: ' .$usuario. '</h1>';
+})->where('usuario','[A-Za-z]+');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
