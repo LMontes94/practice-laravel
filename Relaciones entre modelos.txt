@@ -1,0 +1,8 @@
+Relaciones
+
+relacion 1 a 1
+
+clave foranea se ubica en la migration
+
+Ejemplo
+$table->unsignedBigInteger('user_id');

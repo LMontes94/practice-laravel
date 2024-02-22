@@ -1,0 +1,53 @@
+
+Los seeders sirven para plantar los datos iniciales 
+que necesita nuestro proyecto.
+
+Factorys proporcionan un faker, para generar datos 
+que tengan sentido para rellenar la BD.
+
+Todos los seeders se ejecutan
+php artisan db:seed
+
+Se ejecuta solo el que queremos
+php artisan db:seed --class=NombreSeeder 
+
+Ejemplo de carga de datos solo con en la clase de
+seeders
+
+   Product::create([
+           'title' => 'Example',
+           'short_description' => 'Lorem ipsum',
+           'description' => 'Lorem ipsum Lorem ipsum Lorem ipsum',
+           'price' => 25
+        ]);
+
+Factory
+
+datos de manera generica
+Ejemplo
+ return [
+            'title' =>Str::random(25),
+            'short_description'=>Str::random(45),
+            'desription'=>Str::random(150),
+            'price'=>random_int(1,125),
+        ];
+
+
+Vinculacion de seeders con la factory
+
+Ejemplo:
+
+Product::factory()->count(150)->create();
+
+fakers
+
+ejemplo
+
+return [
+            'title' =>fake()->name(),
+            'short_description'=>fake()->sentence(),
+            'description'=>fake()->paragraph(),
+            'price'=>fake()->numberBetween(1,125),
+        ];
+
+hay mas sentencias
