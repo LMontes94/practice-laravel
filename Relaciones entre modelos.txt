@@ -6,3 +6,199 @@ clave foranea se ubica en la migration
 
 Ejemplo
 $table->unsignedBigInteger('user_id');
+
+Ejemplo:
+
+       User has One Phone
+User  < - - - - - - - - - - > Phone       El modelo que contiene la clave foranea pertenece al que no lo tiene
+                              user_id
+
+se crea una funcion en la clase que no contiene la clave foranea
+con el nombre del modelo.
+
+public function phone(): HasOne
+    {
+        return $this->hasOne(Phone::class);
+    }
+
+y tambien se crea una en el modelo con la clave foranea una funcion
+con el nombre del modelo que no contiene la clave
+
+public function user():BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+Uno a Muchos
+
+Se crea una funcion en la clase que no contiene la clave foranea
+con el nombre del modelo.
+
+public function phones(): HasMany
+    {
+        return $this->hasMany(Phone::class);
+    }
+
+y tambien se crea una en el modelo con la clave foranea una funcion
+con el nombre del modelo que no contiene la clave
+
+public function user():BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+Muchos a Muchos
+
+
+       User belongsToMany Role
+       Role belongsToMany User
+
+User  < -     role_user    - > Role   Se vinculan a traves de una tabla de paso.
+        |- - >user_id      |          Por nomenclatura el nombre de dicha tabla
+              role_id < - -|          es en orden alfabetico
+
+
+Hcer la conexion en laravel, en el model 
+Ejemplo: 
+En caso de no poder respetar la convencion de la nomenclatura de los modelos
+hay que utilizar esta funcion
+ public function users(): BelongsToMany{
+        return $this->belongsToMany(User::class, 'role_user', 'user_id', 'role_id');
+    }       
+
+En caso que si se respete la convencion: 
+       public function users(): BelongsToMany{
+        return $this->belongsToMany(User::class);
+    }     
+
+En caso de querer agregar un pivote se agrega:
+public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withPivot('added_by');
+    }
+}
+
+Esta funcion se agrega en el otro modelo de igual manera 
+Ejemplo:
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)->withPivot('added_by');
+    }
+
+Relacion a traves de una relacion de paso de uno a uno
+
+Ejemplo
+  User has One Phone
+User  < - - - - - - - - - - > Phone - - -          SIM
+                              user_id    |- - - ->phone_id
+
+En mi model SIM
+
+ public function phone(): BelongsTo
+    {
+        return $this->belongsTo(Phone::class);
+    }
+
+En mi modelo Phone 
+
+ public function sim(): HasOne
+    {
+        return $this->hasOne(Sim::class);
+    }
+
+por ultimo en mi modelo User
+
+ public function phoneSim():HasOneThrough
+    {
+       return $this->hasOneThrough(Sim::class,Phone::class);
+    }
+
+Relacion a traves de una relacion de paso de muchos a uno
+Ejemplo:
+
+En el modelo Phone
+  public function sims(): HasMany
+    {
+        return $this->hasMany(Sim::class);
+    }
+
+En el modelo User 
+   public function phoneSims(): HasManyThrough
+    {
+        return $this->hasManyThrough(Sim::class, Phone::class);
+    }
+
+Relacion polimorfica o dinamicas uno a uno
+
+User  < - - - - - - - - - - > Image <- - -          Post
+                                         |- - - ->
+
+En mi clase Image que es la que se ralciona con ambas clases
+
+en nuestra migrate
+
+public function up(): void
+    {
+        Schema::create('images', function (Blueprint $table) {
+            $table->id();
+            $table->string('url');
+            $table->unsignedBigInteger('imageable_id'); //id del elemento con el que va a estar relacionado
+            $table->string('imageable_type'); // para saber con el tipo con el que se va a relacionar
+            $table->timestamps();
+        });
+    }
+
+En el modelo Image
+ public function imageable():MorphTo{
+        return $this->morphTo(); // con esta funcion el framework reconocera con que modelo esta trabajando
+    }
+
+En el modelo Post y User
+ public function image(): MorphOne
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+Relacion en la cual es uno a muchos
+
+El modelo de phone queda igual al caso anterior
+y en los modelos post y user 
+public function image(): MorphMany
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
+muchos a muchos dentro de una estructura polimorfica 
+
+Post < - - - - - - - - - - > Tag <- - -          
+                                         |- - - -> Video
+                            taggables
+                             tag_id
+                             taggable_id
+                             taggable_type
+Se crea la migration de la tabla de paso taggable y se hace la relacion
+ Schema::create('taggeables', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('tag_id');
+            $table->unsignedBigInteger('taggeable_id');
+            $table->unsignedBigInteger('taggeable_type');
+            $table->timestamps();
+        });
+Dentro del modelo polimorfico Tag se crean las dos funciones 
+
+  public function posts(): MorphToMany
+    {
+        return $this->morphedByMany(Post::class, 'taggeable');
+    }
+
+    public function videos(): MorphToMany
+    {
+        return $this->morphedByMany(Video::class, 'taggeable');
+    }
+
+y en los otros dos modelos 
+  public function tags(): MorphToMany
+    {
+        return $this->morphToMany(Tag::class, 'taggeable');
+    }
