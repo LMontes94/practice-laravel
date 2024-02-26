@@ -1,0 +1,54 @@
+Funcion handle:
+se encarga que va hacer ejecutada cuando estamos aplicando un middleware como medio
+de proteccion para una ruta.
+
+Recibimos los datos de la peticion y un tipo de dato Closure $next.(Se encarga de continuar moviendo
+el flujo delo programa)
+
+El middleware debe incluirse dentro del kernel.php
+
+Tenemos el grupo global, estan lo middleware que se aplican a todo.
+Luego los groups en donde tenemos los middlewares que se aplican solo a web y otro subconjunto a api 
+Por ultimo estan los routeMiddleware que se aplican a nuestra logica de negocio.
+
+Para agregar nuestro middleware dentro de alguno de los grupos, se usa la suiguiente sintaxis:
+
+'example' => \App\Http\Middleware\Example::class
+
+
+Middleware en rutas:
+En la ruta se agrega el middleware
+
+Route::middleware('example')->get('/', [ExampleController::class], 'index');
+
+Aplicar varios middleware
+Route::middleware('example','example2','example3')->get('/', [ExampleController::class], 'index');
+
+Middleware Grupos de rutas:
+
+Route::middleware('example','auth','admin')->group(function(){
+    Route::get('/', [ExampleController::class], 'index');
+    Route::get('/', [ExampleController::class], 'index');
+    Route::get('/', [ExampleController::class], 'index');
+    Route::get('/', [ExampleController::class], 'index');
+    Route::get('/', [ExampleController::class], 'index');
+});
+
+Caso que no quiera usar algun middleware que se estan aplicando
+Route::middleware('example')->group(function(){
+    Route::get('/', [ExampleController::class], 'index');
+    Route::get('/', [ExampleController::class], 'index');
+    Route::get('/', [ExampleController::class], 'index')->withoutMiddleware('admin');
+    Route::get('/', [ExampleController::class], 'index');
+    Route::get('/', [ExampleController::class], 'index');
+});
+
+middlewares en constructores 
+
+class ExampleController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('example');
+    }
+
