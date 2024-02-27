@@ -1,0 +1,9 @@
+breeze
+instalacion
+composer require laravel/breeze --dev
+
+dentro de la carpeta del proyecto
+php artisan breeze:install 
+npm install
+
+
