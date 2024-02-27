@@ -7,3 +7,45 @@ php artisan breeze:install
 npm install
 
 
+jetstream 
+
+composer requiere laravel/jetstream
+
+php artisan jetstream:install (inertia o livewire)// para nuestros frontales
+
+livewire similiar a blade
+
+sistema de autenticacion en la carpeta 'config', dentro de ella los archivos 'jetstream' y 'fortify',
+
+npm install
+npm run dev
+
+en otro terminal se levanta nuestro proyecto
+
+livewire
+Soluciones reactivas para la ejecucion de proyectos dentro de laravel
+
+Renderizado parcial, generar una serie de componentes 
+patron modelo vista modelo
+c/u de estos componentes va a tener su propia funcion y va ser reutilizable en cualquier parte
+de nuestro codigo.
+
+crear un layout de base, donde agregamos 
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    @livewireStyles
+</head>
+
+<body>
+    @yield('content')
+    @livewireScripts
+</body>
+
+</html>
