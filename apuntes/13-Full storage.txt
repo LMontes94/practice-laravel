@@ -1,0 +1,96 @@
+Almacenar archivos
+
+primer estrategia
+
+Almacenar archivos en disco
+Permite nuestro propio hosting se el que almacena y archivos nuestros archivos 
+
+2da estrategia 
+Cuando estamos trabajando apps altamente escalables
+Derivar los archivos a base externa, en CDN(ed de servidores vinculados entre sí cuyo objetivo es
+ entregar contenido de la manera más rápida, económica, confiable y segura posible).
+
+configuracion:
+
+ archivo filesystems 
+ es el que cotiene la configuracion como nuestra app de laravel va ahcer el almacenado
+ de los archivos de nuestro sistema, y el guardado lo va hacer de manera local
+
+ En caso de usar un guardado en la nube, hay que cambiar la configuracion.
+
+validar un archivo file en nuestro request 
+
+ejemplo:
+
+ 
+Validator::validate($input, [
+    'attachment' => [
+        'required',
+        File::types(['mp3', 'wav'])
+            ->min(1024)
+            ->max(12 * 1024),
+    ],
+]);
+
+Validator::validate($input, [
+    'photo' => [
+        'required',
+        File::image()
+            ->min(1024)
+            ->max(12 * 1024)
+            ->dimensions(Rule::dimensions()->maxWidth(1000)->maxHeight(500)),
+    ],
+]);
+
+Ejemplo de guardar de manera local los archivos en la carpeta publica
+
+En nuestro controller
+1-Le damos un nombre unico a nuestro archivo
+2-movemos el archivo cargado a la carpeta donde queremos guardar 
+3- creamos una variable y la cargamos con los datos de la request
+4- dos maneras de guardar nuestro archivo cargado en la BD
+
+public function store(InfoRequest $request)
+    {
+       1- $fileName = time() . '.' . $request->file->extension();
+       2- $request->file->move(public_path('images'), $fileName);
+
+       3- $info = new Info;
+        $info->name = $request->name;
+       4- //$info->file_uri = "images/".$fileName;
+       4- $info->file_uri = $fileName;
+        $info->save();
+
+        return redirect()->route('index');
+    }
+
+En nuestra vista, para ver el archivo cargado:
+ <li><img src="{{asset('images/'.$info->file_uri)}}"></li>
+
+ Ejemplo de guardar de manera NO PUBLICA local los archivos
+
+ public function store(InfoRequest $request)
+    {
+        $fileName = time() . '.' . $request->file->extension();
+        $request->file->storeAs('public/images', $fileName);
+
+        $info = new Info;
+        $info->name = $request->name;
+        //$info->file_uri = "images/".$fileName;
+        $info->file_uri = $fileName;
+        $info->save();
+
+        return redirect()->route('index');
+    }
+
+creamos un link entre la carpeta public y storage/public
+php artisan storage:link
+
+En nuestra vista, para ver el archivo cargado:
+<li><img src="{{asset('store/images/'.$info->file_uri)}}"></li>
+
+decidir donde guardar los archivos
+ Storage:disk('local')->put();
+
+Descargar el archivo, sin mostrar 
+return Storage::download('nombrearchivo',$info->file_uri);

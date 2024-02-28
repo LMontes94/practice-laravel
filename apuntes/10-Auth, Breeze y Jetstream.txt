@@ -9,7 +9,7 @@ npm install
 
 jetstream 
 
-composer requiere laravel/jetstream
+composer require laravel/jetstream
 
 php artisan jetstream:install (inertia o livewire)// para nuestros frontales
 
@@ -49,3 +49,6 @@ crear un layout de base, donde agregamos
 </body>
 
 </html>
+
+Hook, ciclo de vida 
+

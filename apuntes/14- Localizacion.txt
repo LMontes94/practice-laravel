@@ -1,0 +1,45 @@
+Direcciorio Lang
+
+carpeta donde vamos a tener todas las carpetas con los idiomas que nuestro poyecto va 
+a soportar.
+
+timezone => zona horaria 
+
+locale => lenguaje por defecto que vamos a usar
+
+fallback_locale => sino tenemos el soporte del lenguaje local podemos configurar un lenguaje predefinido
+
+pasa usar nuestro diccionario en la vista 
+dentro de la funcion ' _ ' colocamos primero el nombre de nuestro archivo y luego la clave 
+Ejemplo:
+<h1>{{ _('welcome.hello')}}</h1>
+
+localizando en un controlador
+
+para utilizar en nuestro controlador:
+
+dentro de la funcion ' __ ' colocamos primero el nombre de nuestro archivo y luego la clave
+en caso de necesitar traducir mas valores, se agrega un array con la clave y el valor con el que queremos que
+se cargue y ademas se puede agregar el idioma en caso de no querer usar el que viene por defecto
+
+Ejemplo:
+$msg = __('welcome.example');
+
+seleccionar idioma 
+
+se crea un middleware para poder mantener el 'locale' en el idioma deseado por el cliente
+En el cual preguntamos si tenemos applocale(idioma seleccionado) y ademas si ese idiomas esta disponible
+(que tengamos el diccionario en dicho idioma). En caso que si este ese idioma, se utiliza, en caso 
+contrario usamos el que viene por defecto en nuestro 'fallback_locale'
+
+   public function handle(Request $request, Closure $next): Response
+    {
+        if(Session()->has('applocale') AND array_key_exists(Session()->get('applocale'),config('lenguages')) ){
+            App::setLocale(Session()->get('applocale'));
+        }else{
+            App::setlocale(config('app.fallback_locale'));
+        }
+        return $next($request);
+    }
+
+luego se agrega el middleware en el archivo 'kernel' 
