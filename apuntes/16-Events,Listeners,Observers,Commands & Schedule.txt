@@ -1,0 +1,17 @@
+Events & Listeners 
+
+clases que van a heredar de la clase Events
+un ejemplo puede ser, cualquier accion relevante puede utilizarse como evento
+
+ejemplo
+                                                                __________
+OrderController:createOrder <-                                  |        |
+                              |                                 |________|
+                              |                                 |        |
+                              v                                 |________|
+                              OrderCreatedEvent::dispatch       |      <-|----->GenerateInvoiceListener
+                                                                |________|          |->Do Something
+                                                                |        |
+                                                                |________|
+                                                                  Channel
+Channel son colas, que van a poder emitir y consumir diferentes mensajes

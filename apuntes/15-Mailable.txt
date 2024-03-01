@@ -1,0 +1,32 @@
+Principios SOLID
+
+PRINCIPIO DE RESPONSABILIDAD UNICA.
+cada funcion debe tener una unica funcion
+
+Mailable
+clase que se va a encargar para gestionar el envio de los diferentes emails.
+
+ php artisan make:mail ExampleMail
+
+ el estilo se agrega en la view de mails, para maximinzar la mayor compatibilidad con distitas
+ paginas de emails
+
+ se configura las variables en nuestro archivo .env, y  en caso de contratar un servicio de email, se 
+ establece la configuracion para que se pueda utilizar este servicio.
+
+En caso de usar gmail
+
+MAIL_HOST=smtp.gmail.com 
+MAIL_PORT=465
+MAIL_USERNAME=un mail real 
+MAIL_PASSWORD= contraseña
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS="mail real"
+MAIL_FROM_NAME="nombre del usuario"
+
+se debe configurar en el mail la configuracion de verificacion en dos pasos y crear una nueva clave de 
+acceso
+
+y en nuestro .env modificar
+
+MAIL_PASSWORD = clave de acceso que nos da google
