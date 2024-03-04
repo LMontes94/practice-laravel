@@ -15,3 +15,85 @@ OrderController:createOrder <-                                  |        |
                                                                 |________|
                                                                   Channel
 Channel son colas, que van a poder emitir y consumir diferentes mensajes
+
+Lo que hacemos es comunicar que algo ocurrio, y cuando ocurre, los que escuchan, actuan.
+
+Patron Observers
+
+ php artisan make:observer aQuienSeObserver --model=Observado
+
+ Lo que hacemos es generar un observador que mira un modelo, y este tiene tres funciones, create, delete, store
+ 
+ Las dos maneras de utilizar nuestros observers, dentro de nuestro EventServiceProvider
+  protected $observers = [
+        Order::class => [
+            OrderObserver::class
+        ]
+  ];
+
+ public function boot(): void
+    {
+        Order::observe(OrderObserver::class);
+    }
+
+Crear commands
+
+para crear nuestro command: 
+php artisan make:command CreateOrderCommand
+
+creamos su firma, su descrpcion y tu funcion 
+
+class CreateOrderCommand extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'make:order';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'This command creates a new random order';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        Order::create([
+            'user_id' => 10,
+            'amount' => 25
+        ]);
+        return Command::SUCCESS;
+    }
+}
+
+para ejecutar 
+
+php y su firma
+
+agregar parametros en la firma
+
+protected $signature = 'make:order{user_id}{amount}';
+
+public function handle()
+    {
+        $user->id  = $this->argument('user_id');
+        $user->amount  = $this->argument('amount');
+        Order::create([
+            'user_id' => 10,
+            'amount' => 25
+        ]);
+        return Command::SUCCESS;
+    }
+
+en nuestro controller 
+
+en nuestra funcion que nos sirva nuestro command, 
+agregamos:
+
+Artisan::call('firma del command',[y encaso de tener atributos en nuestra firma])
