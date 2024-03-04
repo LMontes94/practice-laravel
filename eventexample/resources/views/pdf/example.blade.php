@@ -6,11 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    @vite(['resources/css/app.css','resources/js/app.js/])
 </head>
 
 <body>
-    <a href="{{route('download')}}">Download PDF</a>
+    <H1>Hello World</H1>
 </body>
 
 </html>

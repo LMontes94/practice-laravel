@@ -1,0 +1,29 @@
+Primero y antes que nada debemos tener instalado node.js
+luego en el proyecto hay que instalar las dependencias con el comando ' npm install '
+
+En nuestro Archivo vite.config, ingresamos nuestros puntos de entrada 
+
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+            refresh: true,
+        }),
+    ],
+});
+
+en caso de estar tabajando con una SPA como VUE, no importamos los css y se importa 
+en el app.js de resources
+
+modo desarrollo, vamos a poder hacer modificaciones en tiempo real
+npm run dev
+
+Vite Contruye para produccion 
+npm run build
+
+DOM PDF
+comando para tener nuestra dependencia de PDF
+
+composer require barryvdh/laravel-dompdf
+
+
