@@ -1,0 +1,19 @@
+comando para importar 
+composer require maatwebsite/excel -W
+
+crear el archivo para crear las importaciones
+
+php artisan make:import ProductImport --model=Product
+
+  public function model(array $row)
+    {
+        return new Product([
+            'name' => $row['name'],
+            'description' => $row['description'],
+            'price' => $row['price']
+        ]);
+    }
+
+Para poder publicar nuestro archivo de configuracion "config" 
+Exportar archivo Config
+php artisan vendor:publish --provider="Maatwebsite\Excel\ExcelServiceProvider" --tag=config
