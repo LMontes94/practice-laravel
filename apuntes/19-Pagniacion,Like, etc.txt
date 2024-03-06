@@ -1,0 +1,25 @@
+Paginacion
+
+simplepaginate(numero que queremos que aparezcan) => siguiente y anterior
+paginate() => siguiente y anterior, ademas de lo spuntos intermedios
+
+botonera para la paginacion
+en la vista
+{{$users->links()}}
+
+php artisan vendor:publish --tag=laravel-pagination
+nos traemos los distintos estilos ya predefinidos por laravel
+
+el valor old para recuperar datos de un form
+se coloca en el input 
+
+<input type="text" placeholder="Type name to search" name="name" value="{{old(name)}}">
+
+Crear una regla 
+
+php artisan make:rule NombreRegla
+
+referenciar clave foranea dentro de la migration
+
+ $table->foreign('user_id')->references('id')->on('users');
+

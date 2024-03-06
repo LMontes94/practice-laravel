@@ -1,0 +1,52 @@
+dos tipos de test
+
+Test unitarios, se encargar de probar que pequeñas partes de nuestro codigo funcionan correctamente
+van a comprobar el funcionamiento de una validacion, funcion, etc.
+Ejemplo: test unitarios en nuestros controladores.
+
+Test de integracion, destinado a comprobar el circuito completo de la app
+
+Cuando probamos los test:
+
+-- formato tdd(test develoment driven)  lo que hacemos es escribir los test antes del codigo
+desarrollamos el test describiendo lo que esperamos que nuestro test realice, luego lo corremos estos.
+como este va a fallar, comenzamos a codificar para solucionar nuestro test hasta el punto que corra 
+correctamente.
+
+-- realizamos los test antes de realizar un commit a nuestro repositorio, por ende estos test van a validar
+el codigo desarrollado
+
+dos escuales de trabajo:
+para probar los test vamos a necesitar datos
+1- seeders o factory que se guardan en memoria para ejecutarlos solo se testea
+2- escribir un archivo .env especial para testing igual que una base de datos. Esto sirve
+para no ensuciar nuestra base de datos.
+
+usar PHPunit
+crear test
+php artisan make:test UserTest 
+
+la firma de nuesta funcion de nuestro test, debe empezar siempre con el nombre
+"test_nombredescriptivo"
+Ejemplo:
+
+  public function test_gat_users_list(): void
+    {
+        $response = $this->get('/users'); //ruta de nuestra peticion
+
+        $response->assertStatus(200); //verificar que la ruta funcione 
+
+         $response->assertJsonStructure([
+            ['id','name', 'email','email_verified_at','created_at','updated_at']
+        ]); // la devolucion que estamos esperando
+        $response->assertJsonFragment(['name' => 'Juanjo']); // un dato que sabemos que esta en la BD
+                                                                y que debe devolver
+        $response->assertJsonCount(4); // pedimos la cantidad todal de datos que tenemos en la BD en este
+                                          este ejemplo 4
+    }
+
+se copia el archivo .env y se pega en un nuevo archivo nombrado como .env.testing, se cambia el nombre 
+de la BD y se crea.
+
+ejecutar los test 
+ php artisan test
